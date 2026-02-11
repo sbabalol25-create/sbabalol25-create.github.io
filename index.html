@@ -3,131 +3,441 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Will you be my Valentine?</title>
+  <title>Be My Valentine?</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #ffe6f0;
-      height: 100vh;
-      margin: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    :root{
+      --pink:#ff4d88;
+      --hot:#ff2e73;
+      --bg1:#ffe6f2;
+      --bg2:#fff0f7;
+      --card:#ffffffcc;
+      --shadow: 0 20px 60px rgba(0,0,0,.15);
     }
 
-    .card {
-      background: white;
-      padding: 32px;
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      height:100vh;
+      overflow:hidden;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      background: radial-gradient(circle at 20% 10%, #fff, var(--bg2) 35%, var(--bg1) 100%);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    /* floating hearts background */
+    .hearts{
+      position:fixed;
+      inset:0;
+      z-index:0;
+      pointer-events:none;
+    }
+    .heart{
+      position:absolute;
+      width:18px;
+      height:18px;
+      transform: rotate(45deg);
+      opacity:.6;
+      animation: floatUp linear infinite;
+      filter: drop-shadow(0 6px 6px rgba(0,0,0,.08));
+    }
+    .heart:before, .heart:after{
+      content:"";
+      position:absolute;
+      width:18px;
+      height:18px;
+      border-radius:50%;
+      background:inherit;
+    }
+    .heart:before{ left:-9px; }
+    .heart:after{ top:-9px; }
+    @keyframes floatUp{
+      from{ transform:translateY(110vh) rotate(45deg); }
+      to{ transform:translateY(-20vh) rotate(45deg); }
+    }
+
+    .wrap{
+      position:relative;
+      z-index:2;
+      width:min(520px, 92vw);
+    }
+
+    .card{
+      background: var(--card);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,.6);
+      box-shadow: var(--shadow);
+      border-radius: 22px;
+      padding: 28px 24px;
+      text-align:center;
+    }
+
+    .badge{
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+      padding:6px 12px;
+      border-radius:999px;
+      background: rgba(255,77,136,.12);
+      color:#b3004f;
+      font-weight:700;
+      font-size:13px;
+    }
+
+    h1{
+      margin:14px 0 8px;
+      font-size: 34px;
+      letter-spacing:-.5px;
+    }
+
+    .sub{
+      margin:0 0 18px;
+      color:#3a3a3a;
+      font-size:15px;
+      line-height:1.4;
+    }
+
+    .gif{
+      width:150px;
+      height:150px;
+      margin: 12px auto 18px;
       border-radius: 18px;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.12);
-      text-align: center;
-      width: min(420px, 90%);
+      background:
+        radial-gradient(circle at 30% 25%, #fff 0 18%, transparent 19%),
+        radial-gradient(circle at 70% 25%, #fff 0 18%, transparent 19%),
+        radial-gradient(circle at 50% 62%, #ffb3d1 0 18%, transparent 19%),
+        linear-gradient(180deg, #ff8fb6, #ff5f99);
+      position:relative;
+      overflow:hidden;
+      box-shadow: 0 10px 25px rgba(255,77,136,.22);
+    }
+    .gif:after{
+      content:"✨";
+      position:absolute;
+      font-size:26px;
+      top:12px; left:12px;
+      animation: sparkle 1.4s ease-in-out infinite;
+    }
+    .gif:before{
+      content:"💗";
+      position:absolute;
+      font-size:34px;
+      bottom:10px; right:12px;
+      animation: bounce 1.1s ease-in-out infinite;
+    }
+    @keyframes sparkle{
+      0%,100%{ transform:translateY(0) rotate(0deg); opacity:.9;}
+      50%{ transform:translateY(-6px) rotate(10deg); opacity:1;}
+    }
+    @keyframes bounce{
+      0%,100%{ transform:translateY(0) scale(1); }
+      50%{ transform:translateY(-6px) scale(1.08); }
     }
 
-    h1 {
-      margin: 0 0 10px;
-      font-size: 32px;
+    .btns{
+      display:flex;
+      justify-content:center;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-top:10px;
+      position:relative;
     }
 
-    p {
-      margin: 0 0 22px;
-      color: #444;
-      font-size: 16px;
-    }
-
-    .btns {
-      display: flex;
-      gap: 12px;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-
-    button {
-      border: none;
+    button{
+      border:none;
+      cursor:pointer;
       padding: 12px 18px;
-      border-radius: 12px;
-      font-size: 16px;
-      cursor: pointer;
+      border-radius: 14px;
+      font-weight:800;
+      font-size:16px;
+      transition: transform .12s ease, filter .12s ease;
+      user-select:none;
+      -webkit-tap-highlight-color: transparent;
     }
 
-    #yesBtn {
-      background: #ff4d88;
-      color: white;
+    #yesBtn{
+      background: linear-gradient(180deg, var(--pink), var(--hot));
+      color:white;
+      box-shadow: 0 10px 22px rgba(255,46,115,.25);
+    }
+    #yesBtn:hover{ filter:brightness(1.05); transform:translateY(-1px); }
+
+    #noBtn{
+      background: #f0f0f0;
+      color:#333;
+      box-shadow: 0 8px 18px rgba(0,0,0,.08);
+      position:relative;
     }
 
-    #noBtn {
-      background: #e9e9e9;
-      color: #333;
-      position: relative;
+    .status{
+      margin-top:12px;
+      font-weight:700;
+      color:#b3004f;
+      min-height:22px;
     }
 
-    .hidden {
-      display: none;
+    .tiny{
+      font-size:12px;
+      color:#555;
+      opacity:.8;
+      margin-top:14px;
     }
 
-    .big {
-      font-size: 28px;
-      margin-top: 10px;
+    /* confetti canvas */
+    canvas{
+      position:fixed;
+      inset:0;
+      z-index:3;
+      pointer-events:none;
+    }
+
+    /* yes screen */
+    .yesScreen{
+      display:none;
+      margin-top:10px;
+      text-align:left;
+      background: rgba(255,255,255,.9);
+      border-radius: 18px;
+      padding: 16px;
+      border: 1px solid rgba(255,255,255,.6);
+    }
+    .yesScreen h2{
+      margin:0 0 8px;
+      font-size:20px;
+    }
+    .plan{
+      display:grid;
+      gap:10px;
+      margin-top:10px;
+    }
+    .chip{
+      background: rgba(255,77,136,.12);
+      border: 1px solid rgba(255,77,136,.18);
+      padding:10px 12px;
+      border-radius: 14px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      font-weight:700;
+    }
+    .chip span{ font-weight:600; color:#444; }
+    .footerBtn{
+      margin-top:12px;
+      width:100%;
+      background:#111;
+      color:#fff;
+      padding:12px;
+      border-radius:14px;
+      font-weight:800;
+    }
+
+    /* Shake animation for drama */
+    .shake{
+      animation: shake .35s ease;
+    }
+    @keyframes shake{
+      0%,100%{ transform:translateX(0); }
+      20%{ transform:translateX(-8px); }
+      40%{ transform:translateX(8px); }
+      60%{ transform:translateX(-6px); }
+      80%{ transform:translateX(6px); }
     }
   </style>
 </head>
 <body>
-  <div class="card">
-    <h1>Will you be my Valentine? 💖</h1>
-    <p id="subtext">I promise snacks, good vibes, and zero stress.</p>
 
-    <div class="btns" id="buttons">
-      <button id="yesBtn">Yes 💘</button>
-      <button id="noBtn">No 😭</button>
-    </div>
+  <div class="hearts" id="hearts"></div>
+  <canvas id="confetti"></canvas>
 
-    <div id="result" class="hidden">
-      <div class="big">YAYYY!! 💞</div>
-      <p>Best decision ever. I owe you a sweet treat 🍓</p>
+  <div class="wrap">
+    <div class="card" id="card">
+      <div class="badge">💌 IMPORTANT QUESTION</div>
+      <h1 id="title">Will you be my Valentine? 💖</h1>
+      <p class="sub" id="sub">I’m requesting your presence for a cute little moment. No stress, just vibes.</p>
+
+      <div class="gif" aria-hidden="true"></div>
+
+      <div class="btns" id="btns">
+        <button id="yesBtn">YESSS 💘</button>
+        <button id="noBtn">no 😭</button>
+      </div>
+
+      <div class="status" id="status"></div>
+
+      <div class="yesScreen" id="yesScreen">
+        <h2>YAYYYY 💞 We are officially adorable.</h2>
+        <div class="plan">
+          <div class="chip">🍓 Sweet treat <span>mandatory</span></div>
+          <div class="chip">🎥 Movie night <span>cozy mode</span></div>
+          <div class="chip">🍕 Snacks <span>unlimited</span></div>
+          <div class="chip">🫶 Hand-holding <span>optional (but cute)</span></div>
+        </div>
+        <button class="footerBtn" id="resetBtn">Do it again 😈</button>
+      </div>
+
+      <div class="tiny">Tip: the “no” button is… a little shy.</div>
     </div>
   </div>
 
   <script>
+    // Floating hearts generator
+    const heartsWrap = document.getElementById("hearts");
+    const colors = ["#ff4d88", "#ff78a8", "#ff2e73", "#ffb3d1", "#ff99c2"];
+    const heartCount = 26;
+
+    function makeHeart(){
+      const h = document.createElement("div");
+      h.className = "heart";
+      const size = 10 + Math.random()*18;
+      h.style.width = size + "px";
+      h.style.height = size + "px";
+      h.style.left = Math.random()*100 + "vw";
+      h.style.background = colors[Math.floor(Math.random()*colors.length)];
+      h.style.opacity = (0.35 + Math.random()*0.55).toFixed(2);
+      const dur = 6 + Math.random()*8;
+      h.style.animationDuration = dur + "s";
+      h.style.animationDelay = (-Math.random()*dur) + "s";
+      heartsWrap.appendChild(h);
+    }
+    for(let i=0;i<heartCount;i++) makeHeart();
+
+    // Elements
     const yesBtn = document.getElementById("yesBtn");
     const noBtn = document.getElementById("noBtn");
-    const result = document.getElementById("result");
-    const buttons = document.getElementById("buttons");
-    const subtext = document.getElementById("subtext");
+    const status = document.getElementById("status");
+    const card = document.getElementById("card");
+    const yesScreen = document.getElementById("yesScreen");
+    const btns = document.getElementById("btns");
+    const sub = document.getElementById("sub");
+    const title = document.getElementById("title");
+    const resetBtn = document.getElementById("resetBtn");
 
-    const phrases = [
-      "Are you sure? 🥺",
-      "No takesies backsies…",
-      "Think again 😭",
-      "I’ll be so sad 😔",
-      "Ok but I brought snacks…",
-      "Last chance… 💔"
+    // "No" chaos
+    const pleas = [
+      "WAIT… are you sure? 🥺",
+      "I will literally cry (respectfully). 😭",
+      "Think of the snacks though… 🍪",
+      "No is not an option bestie. 💔",
+      "My heart just did a backflip. 💓",
+      "Ok that was rude 😔 (jk)",
+      "I’m begging. On my knees. (metaphorically) 🙏",
+      "Pls pls pls pls pls 🥹"
     ];
 
-    let i = 0;
+    let tries = 0;
+    let yesScale = 1;
+    let noScale = 1;
 
-    yesBtn.addEventListener("click", () => {
-      buttons.classList.add("hidden");
-      subtext.textContent = "I knew it 😌";
-      result.classList.remove("hidden");
+    function dodge(){
+      tries++;
+      status.textContent = pleas[tries % pleas.length];
+
+      // move within viewport
+      const x = (Math.random()*260 - 130);
+      const y = (Math.random()*200 - 100);
+      noBtn.style.transform = `translate(${x}px, ${y}px) scale(${Math.max(0.55, noScale)})`;
+
+      // make "yes" bigger and "no" smaller for drama
+      yesScale = Math.min(1.75, yesScale + 0.08);
+      noScale = Math.max(0.55, noScale - 0.05);
+      yesBtn.style.transform = `scale(${yesScale})`;
+
+      // little shake on the card sometimes
+      if(tries % 3 === 0){
+        card.classList.add("shake");
+        setTimeout(()=>card.classList.remove("shake"), 380);
+      }
+    }
+
+    noBtn.addEventListener("mouseover", dodge);
+    noBtn.addEventListener("click", (e) => { e.preventDefault(); dodge(); });
+    noBtn.addEventListener("touchstart", (e) => { e.preventDefault(); dodge(); }, {passive:false});
+
+    // Confetti
+    const canvas = document.getElementById("confetti");
+    const ctx = canvas.getContext("2d");
+    let W, H;
+    function resize(){
+      W = canvas.width = window.innerWidth;
+      H = canvas.height = window.innerHeight;
+    }
+    window.addEventListener("resize", resize);
+    resize();
+
+    function popConfetti(){
+      const pieces = [];
+      const count = 220;
+      const cx = W/2, cy = H/2;
+
+      for(let i=0;i<count;i++){
+        pieces.push({
+          x: cx,
+          y: cy,
+          vx: (Math.random()*10 - 5),
+          vy: (Math.random()*-10 - 2),
+          g: 0.18 + Math.random()*0.08,
+          s: 3 + Math.random()*4,
+          r: Math.random()*Math.PI,
+          vr: (Math.random()*0.2 - 0.1),
+          c: colors[Math.floor(Math.random()*colors.length)],
+          life: 140 + Math.random()*40
+        });
+      }
+
+      let frame = 0;
+      function draw(){
+        frame++;
+        ctx.clearRect(0,0,W,H);
+        pieces.forEach(p=>{
+          p.life--;
+          p.vy += p.g;
+          p.x += p.vx;
+          p.y += p.vy;
+          p.r += p.vr;
+
+          ctx.save();
+          ctx.translate(p.x,p.y);
+          ctx.rotate(p.r);
+          ctx.fillStyle = p.c;
+          ctx.fillRect(-p.s/2, -p.s/2, p.s, p.s);
+          ctx.restore();
+        });
+
+        if(frame < 170){
+          requestAnimationFrame(draw);
+        } else {
+          ctx.clearRect(0,0,W,H);
+        }
+      }
+      draw();
+    }
+
+    // YES click
+    yesBtn.addEventListener("click", ()=>{
+      popConfetti();
+      title.textContent = "YOU SAID YESSSS 💖💖💖";
+      sub.textContent = "Ok cute, now we’re locked in 😌";
+      status.textContent = "Mission accomplished: VALENTINE SECURED ✅";
+      btns.style.display = "none";
+      yesScreen.style.display = "block";
     });
 
-    noBtn.addEventListener("mouseover", () => {
-      const x = Math.random() * 250 - 125;
-      const y = Math.random() * 180 - 90;
-      noBtn.style.transform = `translate(${x}px, ${y}px)`;
-      subtext.textContent = phrases[i % phrases.length];
-      i++;
-    });
-
-    // Mobile-friendly: tap makes it dodge too
-    noBtn.addEventListener("click", () => {
-      const x = Math.random() * 250 - 125;
-      const y = Math.random() * 180 - 90;
-      noBtn.style.transform = `translate(${x}px, ${y}px)`;
-      subtext.textContent = phrases[i % phrases.length];
-      i++;
+    // reset
+    resetBtn.addEventListener("click", ()=>{
+      title.textContent = "Will you be my Valentine? 💖";
+      sub.textContent = "I’m requesting your presence for a cute little moment. No stress, just vibes.";
+      status.textContent = "";
+      btns.style.display = "flex";
+      yesScreen.style.display = "none";
+      tries = 0;
+      yesScale = 1;
+      noScale = 1;
+      yesBtn.style.transform = "scale(1)";
+      noBtn.style.transform = "translate(0px, 0px) scale(1)";
     });
   </script>
 </body>
 </html>
+
 
